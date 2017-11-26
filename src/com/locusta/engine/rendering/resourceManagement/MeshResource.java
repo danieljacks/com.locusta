@@ -1,0 +1,44 @@
+package com.locusta.engine.rendering.resourceManagement;
+
+import static org.lwjgl.opengl.GL15.*;
+
+public class MeshResource {
+	private int m_vbo;
+	private int m_ibo;
+	private int m_size;
+	private int m_refCount;
+
+	public MeshResource(int size) {
+		m_vbo = glGenBuffers();
+		m_ibo = glGenBuffers();
+		this.m_size = size;
+		this.m_refCount = 1;
+	}
+
+	@Override
+	protected void finalize() {
+		glDeleteBuffers(m_vbo);
+		glDeleteBuffers(m_ibo);
+	}
+
+	public void addReference() {
+		m_refCount++;
+	}
+
+	public boolean removeReference() {
+		m_refCount--;
+		return m_refCount == 0;
+	}
+
+	public int getVbo() {
+		return m_vbo;
+	}
+
+	public int getIbo() {
+		return m_ibo;
+	}
+
+	public int getSize() {
+		return m_size;
+	}
+}
